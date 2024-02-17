@@ -2,35 +2,18 @@
 #define ARENA_H_
 
 #include <stdlib.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <assert.h>
 
-#define LIBC_MALLOC_BACKEND 0x0
-#define WIN32_VIRTUAL_ALLOC_BACKEND 0x1
-
-#ifndef ARENA_BACKEND
-    #define ARENA_BACKEND LIBC_MALLOC_BACKEND
-#endif // ARENA_BACKEND
-
-#define ARENA_ASSERT assert
-
-#define arena_true 1
-#define arena_false 0
-
-#define DEFAULT_ARENA_CAPACITY 1024
-
 typedef struct {
-    size_t size;
-    size_t capacity;
-    char *mem;
+	size_t capacity;
+	size_t size;
+	char *mem;
 } Arena;
 
-#if ARENA_BACKEND == LIBC_MALLOC_BACKEND
-
-Arena *arena_create(size_t capacity);
-void arena_release(Arena *arena);
+Arena arena_init(size_t capacity);
+char *arena_alloc(Arena *arena, size_t alloc_size);
+void arena_reset(Arena *arena);
+void arena_free(Arena *arena);
 
 #endif
-
-#endif // ARENA_H_ 
