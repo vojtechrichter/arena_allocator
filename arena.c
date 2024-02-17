@@ -2,12 +2,16 @@
 
 Arena arena_init(size_t capacity)
 {
+#if ALLOC_BACKEND == MALLOC_BACKEND
+
 	Arena arena = {0};
 	arena.capacity = capacity;
 	arena.size = 0;
 	arena.mem = calloc(1, capacity);
 
 	return arena;
+
+#endif
 }
 
 char *arena_alloc(Arena *arena, size_t alloc_size)
@@ -21,14 +25,18 @@ char *arena_alloc(Arena *arena, size_t alloc_size)
 	return alloc;
 }
 
-void arena_reset(Arena *arena)
+inline void arena_reset(Arena *arena)
 {
 	arena->size = 0;
 	arena->mem = (void *)0;
 }
 
-void arena_free(Arena *arena)
+inline void arena_free(Arena *arena)
 {
+#if ALLOC_BACKEND == MALLOC_BACKEND
+
 	free(arena->mem);
 	arena = (void *)0;
+
+#endif
 }
